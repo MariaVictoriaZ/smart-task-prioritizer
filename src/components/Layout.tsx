@@ -1,29 +1,44 @@
-import { Outlet } from 'react-router'
-import { NavLink } from 'react-router'
+import { ReactNode } from "react";
 
-export function Layout() {
+type Tab = "dashboard" | "tasks" | "habits" | "focus" | "stats";
+
+export function Layout({
+  children,
+  tab,
+  setTab,
+}: {
+  children: ReactNode;
+  tab: Tab;
+  setTab: (tab: Tab) => void;
+}) {
+  const tabs: Tab[] = ["dashboard", "tasks", "habits", "focus", "stats"];
+
   return (
-    <div className="min-h-screen flex bg-background text-foreground">
-      
-      {/* Sidebar */}
-      <aside className="w-64 border-r p-4 space-y-4">
-        <h1 className="text-xl font-bold">Smart Task Manager</h1>
+    <div className="flex h-screen bg-gray-100">
 
-        <nav className="flex flex-col gap-2 text-sm">
-          <NavLink to="/" className="hover:underline">Dashboard</NavLink>
-          <NavLink to="/tasks" className="hover:underline">Tasks</NavLink>
-          <NavLink to="/habits" className="hover:underline">Habits</NavLink>
-          <NavLink to="/focus" className="hover:underline">Focus</NavLink>
-          <NavLink to="/stats" className="hover:underline">Stats</NavLink>
-          <NavLink to="/settings" className="hover:underline">Settings</NavLink>
-        </nav>
-      </aside>
+      {/* SIDEBAR */}
+      <div className="w-64 bg-white border-r p-4 flex flex-col gap-2">
+        <h1 className="text-xl font-bold mb-4">Smart Manager</h1>
 
-      {/* Main content */}
-      <main className="flex-1 p-6">
-        <Outlet />
-      </main>
+        {tabs.map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`text-left px-3 py-2 rounded transition ${
+              tab === t
+                ? "bg-black text-white"
+                : "hover:bg-gray-100"
+            }`}
+          >
+            {t.charAt(0).toUpperCase() + t.slice(1)}
+          </button>
+        ))}
+      </div>
 
+      {/* MAIN */}
+      <div className="flex-1 p-6 overflow-y-auto">
+        {children}
+      </div>
     </div>
-  )
+  );
 }

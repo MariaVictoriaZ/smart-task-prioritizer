@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 /* ================= TYPES ================= */
 
@@ -35,11 +35,17 @@ type AppContextType = {
   updateTask: (id: number, title: string) => void;
 
   addHabit: (title: string) => void;
-  completeHabit: (id: number) => void;
   deleteHabit: (id: number) => void;
+  completeHabit: (id: number) => void;
 
   addFocusSession: (duration: number) => void;
 };
+
+/* ================= STORAGE KEYS ================= */
+
+const TASKS_KEY = "tasks";
+const HABITS_KEY = "habits";
+const FOCUS_KEY = "focusSessions";
 
 /* ================= CONTEXT ================= */
 
@@ -52,7 +58,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [focusSessions, setFocusSessions] = useState<FocusSession[]>([]);
 
-/* -------- TASKS -------- */
+  /* ===== LOAD FROM LOCALSTORAGE ===== */
+
+  useEffect(() => {
+    const savedTasks = localStorage.getItem(TASKS_KEY);
+    const savedHabits = localStorage.getItem(HABITS_KEY);
+    const savedFocus = localStorage.getItem(FOCUS_KEY);
+
+    if (savedTasks) setTasks(JSON.parse(savedTasks));
+    if (savedHabits) setHabits(JSON.parse(savedHabits));
+    if (savedFocus) setFocusSessions(JSON.parse(savedFocus));
+  }, []);
+
+  /* ===== SAVE TO LOCALSTORAGE ===== */
+
+  useEffect(() => {
+    localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem(HABITS_KEY, JSON.stringify(habits));
+  }, [habits]);
+
+  useEffect(() => {
+    localStorage.setItem(FOCUS_KEY, JSON.stringify(focusSessions));
+  }, [focusSessions]);
+
+  /* ===== TASKS ===== */
 
   const addTask = (title: string, category: Task["category"]) => {
     setTasks([
@@ -95,7 +127,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   };
 
-/* -------- HABITS -------- */
+  /* ===== HABITS ===== */
 
   const addHabit = (title: string) => {
     setHabits([
@@ -107,6 +139,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         completedToday: false,
       },
     ]);
+  };
+
+  const deleteHabit = (id: number) => {
+    setHabits(habits.filter((h) => h.id !== id));
   };
 
   const completeHabit = (id: number) => {
@@ -123,11 +159,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  const deleteHabit = (id: number) => {
-    setHabits(habits.filter((h) => h.id !== id));
-  };
-
-/* -------- FOCUS -------- */
+  /* ===== FOCUS ===== */
 
   const addFocusSession = (duration: number) => {
     setFocusSessions([
@@ -154,8 +186,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         updateTask,
 
         addHabit,
-        completeHabit,
         deleteHabit,
+        completeHabit,
 
         addFocusSession,
       }}

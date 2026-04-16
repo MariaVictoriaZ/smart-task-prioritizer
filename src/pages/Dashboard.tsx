@@ -18,10 +18,15 @@ export function Dashboard() {
     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">
-        Welcome back! Here's your productivity overview.
-      </h1>
+    <div className="space-y-8">
+
+      {/* HEADER */}
+      <div>
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <p className="text-gray-500">
+          Welcome back! Here's your productivity overview.
+        </p>
+      </div>
 
       {/* TOP STATS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -31,48 +36,56 @@ export function Dashboard() {
         <Stat title="Favorites" value={favoriteTasks} />
       </div>
 
-      {/* PROGRESS */}
-      <div className="bg-white p-4 rounded-xl shadow space-y-2">
-        <h2 className="font-semibold">Progress</h2>
-        <p className="text-sm text-gray-500">Completion Rate</p>
+      {/* PROGRESS + SUMMARY */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div className="w-full bg-gray-200 h-3 rounded-full">
-          <div
-            className="bg-black h-3 rounded-full"
-            style={{ width: `${completionRate}%` }}
-          />
+        {/* PROGRESS */}
+        <div className="bg-white p-6 rounded-xl shadow space-y-3">
+          <h2 className="font-semibold text-lg">Progress</h2>
+
+          <p className="text-sm text-gray-500">Completion Rate</p>
+
+          <div className="w-full bg-gray-200 h-3 rounded-full">
+            <div
+              className="bg-black h-3 rounded-full transition-all"
+              style={{ width: `${completionRate}%` }}
+            />
+          </div>
+
+          <p className="text-sm font-medium">{completionRate}% completed</p>
         </div>
 
-        <p className="text-sm">{completionRate}%</p>
+        {/* SUMMARY */}
+        <div className="bg-white p-6 rounded-xl shadow space-y-2">
+          <h2 className="font-semibold text-lg">Summary</h2>
+
+          <p className="text-gray-600">Tasks Done: {completedTasks}</p>
+          <p className="text-gray-600">Tasks Left: {pendingTasks}</p>
+          <p className="text-gray-600">Focus Sessions: {totalFocusSessions}</p>
+        </div>
+
       </div>
 
-      {/* SECOND ROW */}
+      {/* HABITS + EXTRA */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
         <Stat title="Active Habits" value={activeHabits} />
-        <Stat title="Habits Done Today" value={habitsDoneToday} />
+        <Stat title="Habits Today" value={habitsDoneToday} />
         <Stat title="Focus Sessions" value={totalFocusSessions} />
+
       </div>
 
-      {/* BREAKDOWN */}
-      <div className="bg-white p-4 rounded-xl shadow space-y-2">
-        <h2 className="font-semibold">Summary</h2>
-
-        <p>Tasks Done: {completedTasks}</p>
-        <p>Tasks Left: {pendingTasks}</p>
-        <p>Habits Active: {activeHabits}</p>
-        <p>Focus Sessions: {totalFocusSessions}</p>
-      </div>
     </div>
   );
 }
 
-/* ===== SMALL COMPONENT ===== */
+/* ===== STAT CARD ===== */
 
 function Stat({ title, value }: { title: string; value: number }) {
   return (
-    <div className="bg-white p-4 rounded-xl shadow">
+    <div className="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
       <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-2xl font-bold">{value}</p>
+      <p className="text-3xl font-bold">{value}</p>
     </div>
   );
 }
