@@ -1,44 +1,94 @@
 import { ReactNode } from "react";
+import {
+  LayoutDashboard,
+  CheckSquare,
+  Flame,
+  Timer,
+  BarChart3,
+} from "lucide-react";
 
-type Tab = "dashboard" | "tasks" | "habits" | "focus" | "stats";
+type Tab =
+  | "dashboard"
+  | "tasks"
+  | "habits"
+  | "focus"
+  | "stats";
 
-export function Layout({
-  children,
-  tab,
-  setTab,
-}: {
-  children: ReactNode;
+type Props = {
   tab: Tab;
   setTab: (tab: Tab) => void;
-}) {
-  const tabs: Tab[] = ["dashboard", "tasks", "habits", "focus", "stats"];
+  children: ReactNode;
+};
+
+export function Layout({ tab, setTab, children }: Props) {
+  const menu: {
+    key: Tab;
+    label: string;
+    icon: React.ReactNode;
+  }[] = [
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      key: "tasks",
+      label: "Tasks",
+      icon: <CheckSquare size={20} />,
+    },
+    {
+      key: "habits",
+      label: "Habits",
+      icon: <Flame size={20} />,
+    },
+    {
+      key: "focus",
+      label: "Focus",
+      icon: <Timer size={20} />,
+    },
+    {
+      key: "stats",
+      label: "Stats",
+      icon: <BarChart3 size={20} />,
+    },
+  ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="min-h-screen flex bg-white">
 
       {/* SIDEBAR */}
-      <div className="w-64 bg-white border-r p-4 flex flex-col gap-2">
-        <h1 className="text-xl font-bold mb-4">Smart Manager</h1>
+      <aside className="w-72 border-r bg-white p-5">
+        <h1 className="text-3xl font-bold mb-8">
+          FocusFlow
+        </h1>
 
-        {tabs.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`text-left px-3 py-2 rounded transition ${
-              tab === t
-                ? "bg-black text-white"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </div>
+        <nav className="space-y-2">
+          {menu.map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setTab(item.key)}
+              className={`w-full flex items-center gap-3 px-5 py-4 text-base rounded-xl transition text-left ${
+                tab === item.key
+                  ? "bg-black text-white"
+                  : "hover:bg-gray-100 text-gray-700"
+              }`}
+            >
+              {item.icon}
+              <span className="capitalize">
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </nav>
+      </aside>
 
-      {/* MAIN */}
-      <div className="flex-1 p-6 overflow-y-auto">
-        {children}
-      </div>
+      {/* CONTENT */}
+      <main className="flex-1 bg-gray-50">
+        <div className="max-w-6xl mx-auto p-6 lg:p-10">
+          {children}
+        </div>
+      </main>
+
     </div>
   );
 }

@@ -147,17 +147,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const completeHabit = (id: number) => {
     setHabits(
-      habits.map((h) =>
+        habits.map((h) =>
         h.id === id
-          ? {
-              ...h,
-              streak: h.streak + 1,
-              completedToday: true,
+            ? {
+                ...h,
+                completedToday: !h.completedToday,
+                streak: !h.completedToday ? h.streak + 1 : Math.max(h.streak - 1, 0),
             }
-          : h
-      )
+            : h
+        )
     );
-  };
+    };
 
   /* ===== FOCUS ===== */
 

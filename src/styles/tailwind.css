@@ -1,3 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+/* ===== MAKE LIGHT THEME ===== */
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  --card: #ffffff;
+  --card-border: #e5e7eb;
+
+  --primary: #0f172a;
+  --primary-soft: #4f46e5;
+
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+
+  --accent: #eef2ff;
+  --danger: #ef4444;
+
+  --radius: 12px;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)];
+  }
+
+  * {
+    @apply border-[var(--card-border)];
+  }
+}
